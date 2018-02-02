@@ -3,10 +3,21 @@ package at.codingpanda.ibutler.app
 import android.app.Fragment
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapFragment
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
-class MainActivity : AppCompatActivity() {
+
+
+
+class MainActivity : FragmentActivity(), OnMapReadyCallback {
+
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -32,26 +43,29 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        toggleMap(true)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        toggleMap(true)
     }
-    fun getFragment(id:Int): Fragment {
-        val fm = fragmentManager
-        return fragmentManager.findFragmentById(R.id.map)
+    override fun onMapReady(map: GoogleMap) {
+        map.addMarker(MarkerOptions()
+                .position(LatLng(0.0, 0.0))
+                .title("Marker"))
     }
+
     fun toggleMap(toggle:Boolean){
-        var foo : Fragment? =null;
-        val fm = fragmentManager
-        foo = fragmentManager.findFragmentById(R.id.map)
+
+        val mapFragment = fragmentManager
+                .findFragmentById(R.id.map) as MapFragment
+        mapFragment.getMapAsync(this)
         if(toggle)
-            fm.beginTransaction()
+            fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                    .hide(getFragment(R.id.map))
+                    .hide(mapFragment)
                     .commit()
         else
-            fm.beginTransaction()
+            fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                    .show(getFragment(R.id.map))
+                    .show(mapFragment)
                     .commit()
     }
 }

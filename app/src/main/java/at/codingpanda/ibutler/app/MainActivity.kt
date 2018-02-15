@@ -12,28 +12,49 @@ import com.google.android.gms.maps.MapFragment
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import android.R.attr.fragment
+import android.support.annotation.NonNull
+import android.view.MenuItem
+import android.view.View
+import kotlinx.android.synthetic.main.fragment_map.*
 
 
-
-
-class MainActivity : FragmentActivity(), OnMapReadyCallback {
+class MainActivity : FragmentActivity() {
 
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
                 message.setText(R.string.title_home)
-                toggleMap(true)
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                        .replace(R.id.frame_layout,HomeFragment().newInstance())
+                        .commit()
+                //toggleMap(true)
+                //inflateNewJob(true)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
                 message.setText(R.string.title_dashboard)
-                toggleMap(false)
+                //toggleMap(false)
+                //fragmentManager.executePendingTransactions()
+                //inflateNewJob(false)
+
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                        .replace(R.id.frame_layout,MapFragmento().newInstance())
+                        .commit()
+
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
                 message.setText(R.string.title_notifications)
-                toggleMap(true)
+                //toggleMap(true)
+                //inflateNewJob(false)
+                fragmentManager.beginTransaction()
+                        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                        .replace(R.id.frame_layout,HomeFragment().newInstance())
+                        .commit()
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -44,15 +65,14 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        toggleMap(true)
-    }
-    override fun onMapReady(map: GoogleMap) {
-        map.addMarker(MarkerOptions()
-                .position(LatLng(0.0, 0.0))
-                .title("Marker"))
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .replace(R.id.frame_layout,HomeFragment().newInstance())
+                .commit()
     }
 
-    fun toggleMap(toggle:Boolean){
+
+    /*fun toggleMap(toggle:Boolean){
 
         val mapFragment = fragmentManager
                 .findFragmentById(R.id.map) as MapFragment
@@ -67,6 +87,19 @@ class MainActivity : FragmentActivity(), OnMapReadyCallback {
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                     .show(mapFragment)
                     .commit()
-    }
+    }*/
+
+    /*fun inflateNewJob(toggle:Boolean){
+        if (toggle) {
+            val ft = supportFragmentManager.beginTransaction()
+            ft.add(R.id.your_placeholder, BlankFragment())
+            ft.commit()
+        } else {
+            val ft = supportFragmentManager.beginTransaction()
+            ft.hide(BlankFragment())
+            ft.commit()
+        }
+
+    }*/
 }
 

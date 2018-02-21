@@ -7,19 +7,17 @@ import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapFragment
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import android.R.attr.fragment
 import android.support.annotation.NonNull
 import android.view.MenuItem
 import android.view.View
-import kotlinx.android.synthetic.main.fragment_map.*
+import com.google.android.gms.maps.*
 
 
-class MainActivity : FragmentActivity() {
+class MainActivity : FragmentActivity(),OnMapReadyCallback {
+
 
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -30,7 +28,7 @@ class MainActivity : FragmentActivity() {
                         .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                         .replace(R.id.frame_layout,HomeFragment().newInstance())
                         .commit()
-                //toggleMap(true)
+                toggleMap(true)
                 //inflateNewJob(true)
                 return@OnNavigationItemSelectedListener true
             }
@@ -39,17 +37,13 @@ class MainActivity : FragmentActivity() {
                 //toggleMap(false)
                 //fragmentManager.executePendingTransactions()
                 //inflateNewJob(false)
-
-                fragmentManager.beginTransaction()
-                        .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                        .replace(R.id.frame_layout,MapFragmento().newInstance())
-                        .commit()
+                toggleMap(false)
 
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
                 message.setText(R.string.title_notifications)
-                //toggleMap(true)
+                toggleMap(true)
                 //inflateNewJob(false)
                 fragmentManager.beginTransaction()
                         .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
@@ -69,14 +63,25 @@ class MainActivity : FragmentActivity() {
                 .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                 .replace(R.id.frame_layout,HomeFragment().newInstance())
                 .commit()
-    }
-
-
-    /*fun toggleMap(toggle:Boolean){
+        toggleMap(true)
 
         val mapFragment = fragmentManager
                 .findFragmentById(R.id.map) as MapFragment
         mapFragment.getMapAsync(this)
+
+    }
+    override fun onMapReady(googleMap: GoogleMap) {
+        val sydney = LatLng(-33.852, 151.211)
+        googleMap.addMarker(MarkerOptions().position(sydney)
+                .title("Marker in Sydney"))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    }
+
+
+    fun toggleMap(toggle:Boolean){
+
+        val mapFragment = fragmentManager
+                .findFragmentById(R.id.map) as MapFragment
         if(toggle)
             fragmentManager.beginTransaction()
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
@@ -87,7 +92,7 @@ class MainActivity : FragmentActivity() {
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                     .show(mapFragment)
                     .commit()
-    }*/
+    }
 
     /*fun inflateNewJob(toggle:Boolean){
         if (toggle) {

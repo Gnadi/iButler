@@ -2,13 +2,20 @@ package at.codingpanda.ibutler.app
 
 import android.annotation.SuppressLint
 import android.app.Fragment
+import android.os.Bundle
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import android.support.v7.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.google.android.gms.maps.MapFragment
+import com.google.android.gms.maps.SupportMapFragment
+
+
 
 
 class MapFragmento: MapFragment(), OnMapReadyCallback {
@@ -25,8 +32,7 @@ class MapFragmento: MapFragment(), OnMapReadyCallback {
                 .title("Marker in Sydney"))
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
-
-    override fun getMapAsync(p0: OnMapReadyCallback?) {
-        super.getMapAsync(p0)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View {
+        return inflater.inflate(R.id.map, container, false)
     }
 }
